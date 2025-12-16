@@ -1,0 +1,8 @@
+{
+  "/page": "app/page.js",
+  "/submit/page": "app/submit/page.js",
+  "/story/[id]/page": "app/story/[id]/page.js",
+  "/api/view/route": "app/api/view/route.js",
+  "/about/page": "app/about/page.js",
+  "/edit/[id]/page": "app/edit/[id]/page.js"
+}

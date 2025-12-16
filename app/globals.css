@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 251, 240; /* สีครีม #fffbf0 */
+  --background-end-rgb: 255, 251, 240;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+
+/* ซ่อน Scrollbar สำหรับ Horizontal Scroll ในเมนูมือถือ */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* จัดการ Safe Area สำหรับ iPhone รุ่นใหม่ที่มีรอยบาก */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}

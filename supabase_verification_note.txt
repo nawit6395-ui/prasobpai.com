@@ -1,0 +1,11 @@
+[
+  {
+    "id": "1",
+    "user_id": "00000000-0000-0000-0000-000000000000",
+    "title": "Welcome to Prasobpai",
+    "content": "This is a sample story from the database.",
+    "category": "daily",
+    "severity_level": 5,
+    "created_at": "2024-01-01T00:00:00Z"
+  }
+]
