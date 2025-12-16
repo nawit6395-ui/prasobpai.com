@@ -5,6 +5,7 @@ import CookieConsent from "@/components/CookieConsent";
 const notoSansThai = Noto_Sans_Thai({ subsets: ["thai"] });
 
 export const metadata = {
+  metadataBase: new URL('https://prasobpai.com'),
   title: "Prasobpai - ประสบภัย.คอม",
   description: "พื้นที่ระบายของคนดวงตก เปลี่ยนเรื่องซวยให้เป็นเรื่องแชร์",
   icons: {
