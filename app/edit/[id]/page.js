@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabaseClient';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
 import SeveritySlider from '@/components/SeveritySlider';
+import RichTextEditor from '@/components/RichTextEditor';
 
 export default function EditPage({ params }) {
     const router = useRouter();
@@ -21,6 +22,8 @@ export default function EditPage({ params }) {
         severity: 5,
         content: ''
     });
+
+    const [userId, setUserId] = useState(null);
 
     const categoryMap = {
         'crisis': 'มรสุมชีวิต',
@@ -45,6 +48,7 @@ export default function EditPage({ params }) {
                     router.push('/login');
                     return;
                 }
+                setUserId(user.id);
 
                 // Fetch story first
                 const { data, error } = await supabase
@@ -197,14 +201,11 @@ export default function EditPage({ params }) {
 
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">เล่าเหตุการณ์</label>
-                            <textarea
-                                name="content"
-                                rows="5"
-                                value={formData.content}
-                                onChange={handleChange}
-                                className="w-full p-3 border-2 border-slate-300 rounded-lg focus:border-slate-900 focus:outline-none bg-slate-50 text-sm"
-                                required
-                            ></textarea>
+                            <RichTextEditor
+                                content={formData.content}
+                                onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
+                                userId={userId}
+                            />
                         </div>
 
                         <button

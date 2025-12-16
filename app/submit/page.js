@@ -1,17 +1,19 @@
 'use client';
 
 import Swal from 'sweetalert2';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { PlusCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import SeveritySlider from '@/components/SeveritySlider';
+import RichTextEditor from '@/components/RichTextEditor';
 
 export default function SubmitPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
         category: 'มรสุมชีวิต',
@@ -26,11 +28,28 @@ export default function SubmitPage() {
         'คู่มือรอด': 'guide'
     };
 
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setUser(user);
+            }
+        };
+        checkUser();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value
+        }));
+    };
+
+    const handleEditorChange = (html) => {
+        setFormData(prev => ({
+            ...prev,
+            content: html
         }));
     };
 
@@ -41,12 +60,7 @@ export default function SubmitPage() {
         const categoryEnum = categoryMap[formData.category];
 
         try {
-            // Check for user session first
             const { data: { user } } = await supabase.auth.getUser();
-
-            // Note: In a real app, we must have a user. 
-            // For this demo, if no user, we might fail or need a fallback if RLS allows.
-            // Assuming the schema requires user_id.
 
             if (!user) {
                 Swal.fire({
@@ -116,12 +130,12 @@ export default function SubmitPage() {
     return (
         <div className="min-h-screen bg-[#fffbf0] font-sans selection:bg-amber-200 selection:text-slate-900">
             <Navbar />
-            <div className="max-w-2xl mx-auto px-4 py-8 md:py-12 mt-20 md:mt-0 pb-24 md:pb-0">
+            <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 mt-20 md:mt-0 pb-24 md:pb-0">
                 <div className="bg-white p-6 md:p-8 rounded-xl border-4 border-slate-900 shadow-[4px_4px_0px_0px_rgba(251,191,36,1)] relative">
                     <h2 className="text-2xl font-black text-slate-900 mb-2 flex items-center gap-2">
                         <PlusCircle className="text-red-500" /> เขียนเรื่องใหม่
                     </h2>
-                    <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
+                    <form className="space-y-6 mt-6" onSubmit={handleSubmit}>
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">หัวข้อเรื่อง (ขอแบบพีคๆ)</label>
                             <input
@@ -135,7 +149,7 @@ export default function SubmitPage() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 mb-1">หมวดหมู่</label>
                                 <select
@@ -161,15 +175,11 @@ export default function SubmitPage() {
 
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">เล่าเหตุการณ์</label>
-                            <textarea
-                                name="content"
-                                rows="5"
-                                value={formData.content}
-                                onChange={handleChange}
-                                placeholder="ระบายมาให้หมด..."
-                                className="w-full p-3 border-2 border-slate-300 rounded-lg focus:border-slate-900 focus:outline-none bg-slate-50 text-sm"
-                                required
-                            ></textarea>
+                            <RichTextEditor
+                                content={formData.content}
+                                onChange={handleEditorChange}
+                                userId={user?.id}
+                            />
                         </div>
 
                         <button

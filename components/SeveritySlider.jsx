@@ -107,7 +107,7 @@ export default function SeveritySlider({ value, onChange, name = 'severity' }) {
                     width: 24px;
                     border-radius: 50%;
                     background: #ffffff;
-                    margin-top: -9px; /* (24px - 6px) / 2 = 9px */
+                    margin-top: -12px; /* Adjusted to pull thumb up to center */
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                     border: 4px solid currentColor;
                     transition: transform 0.1s ease-in-out;
@@ -127,7 +127,7 @@ export default function SeveritySlider({ value, onChange, name = 'severity' }) {
 
                 input[type=range]::-webkit-slider-runnable-track {
                     width: 100%;
-                    height: 6px;
+                    height: 12px; /* Set to match h-3 (12px) of the visual track */
                     background: transparent; /* Handled by div behind */
                 }
 

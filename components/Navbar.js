@@ -62,10 +62,11 @@ export default function Navbar() {
                         <div className="flex space-x-6 items-center">
                             <Link href="/" className={`hover:text-amber-400 font-medium ${isActive('/') ? 'text-amber-400 underline decoration-wavy underline-offset-4' : ''}`}>ศูนย์บรรเทาทุกข์</Link>
                             <Link href="/submit" className={`hover:text-amber-400 font-medium ${isActive('/submit') ? 'text-amber-400 underline decoration-wavy underline-offset-4' : ''}`}>แจ้งเหตุฉุกเฉิน</Link>
+                            <Link href="/about" className={`hover:text-amber-400 font-medium ${isActive('/about') ? 'text-amber-400 underline decoration-wavy underline-offset-4' : ''}`}>เกี่ยวกับเรา</Link>
 
                             {user ? (
                                 <div className="flex items-center gap-4">
-                                    <Link href="/about" className="flex items-center gap-2 hover:text-amber-400">
+                                    <Link href="/profile/edit" className="flex items-center gap-2 hover:text-amber-400">
                                         <div className="w-8 h-8 rounded-full bg-slate-700 border border-white flex items-center justify-center overflow-hidden">
                                             <img src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} alt="Profile" />
                                         </div>
@@ -91,7 +92,7 @@ export default function Navbar() {
                 <div className="bg-slate-900 text-white px-4 py-3 flex justify-between items-center shadow-md">
                     <div className="flex items-center gap-2">
                         {user ? (
-                            <Link href="/about">
+                            <Link href="/profile/edit">
                                 <div className="w-8 h-8 rounded-full bg-slate-700 border border-slate-500 flex items-center justify-center overflow-hidden">
                                     <img src={user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`} alt="Profile" />
                                 </div>
@@ -143,8 +144,8 @@ export default function Navbar() {
                     <span className="text-[10px] font-bold">แจ้งเตือน</span>
                 </button>
 
-                <Link href="/about" className={`flex flex-col items-center gap-1 w-1/5 ${isActive('/about') ? 'text-slate-900' : 'text-slate-400'}`}>
-                    <User size={24} strokeWidth={isActive('/about') ? 3 : 2} />
+                <Link href="/profile/edit" className={`flex flex-col items-center gap-1 w-1/5 ${isActive('/profile/edit') ? 'text-slate-900' : 'text-slate-400'}`}>
+                    <User size={24} strokeWidth={isActive('/profile/edit') ? 3 : 2} />
                     <span className="text-[10px] font-bold">ฉัน</span>
                 </Link>
             </div>

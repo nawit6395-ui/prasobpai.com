@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CloudRain, Zap, Coffee, LifeBuoy, AlertTriangle } from 'lucide-react';
+import { CloudRain, Zap, Coffee, LifeBuoy, AlertTriangle, ChevronDown } from 'lucide-react';
 import StoryCard from './StoryCard';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -15,6 +15,7 @@ const categories = [
 
 export default function Feed() {
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [sortBy, setSortBy] = useState('newest'); // newest, top_rated, most_liked
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState(null);
@@ -75,6 +76,7 @@ export default function Feed() {
                     slug: story.slug,
                     severity: story.severity_level,
                     user_id: story.user_id,
+                    createdAt: story.created_at, // Keep raw date for sorting
                     time: new Date(story.created_at).toLocaleDateString('th-TH', {
                         day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
                     }),
@@ -101,12 +103,16 @@ export default function Feed() {
         setStories(prev => prev.filter(story => story.id !== deletedStoryId));
     };
 
-    const filteredStories = selectedCategory === 'all'
-        ? stories
-        : stories.filter(s => s.category === selectedCategory);
+    const filteredStories = stories.filter(s => selectedCategory === 'all' || s.category === selectedCategory);
+
+    const sortedStories = [...filteredStories].sort((a, b) => {
+        if (sortBy === 'top_rated') return b.severity - a.severity;
+        if (sortBy === 'most_liked') return b.hugCount - a.hugCount;
+        return new Date(b.createdAt) - new Date(a.createdAt); // Default: Newest
+    });
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12 pb-24 md:pb-12">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 pb-24 md:pb-12">
 
             {/* Mobile Categories (Horizontal Scroll) */}
             <div className="md:hidden mb-8">
@@ -126,20 +132,38 @@ export default function Feed() {
                 </div>
             </div>
 
-            {/* Desktop Categories (Buttons) */}
-            <div className="hidden md:flex flex-wrap gap-3 mb-10 justify-center">
-                {categories.map((cat) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold border-2 transition-all ${selectedCategory === cat.id
-                            ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-md'
-                            : 'bg-white text-slate-700 border-slate-300 hover:border-slate-900 hover:text-slate-900'
-                            }`}
+            {/* Desktop Categories (Buttons) + Sort */}
+            <div className="hidden md:flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => setSelectedCategory(cat.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold border-2 transition-all ${selectedCategory === cat.id
+                                ? 'bg-slate-900 text-amber-400 border-slate-900 shadow-md'
+                                : 'bg-white text-slate-700 border-slate-300 hover:border-slate-900 hover:text-slate-900'
+                                }`}
+                        >
+                            {cat.icon} {cat.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Sort Dropdown */}
+                <div className="relative group min-w-[160px]">
+                    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-500">
+                        <ChevronDown size={16} />
+                    </div>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="appearance-none w-full bg-white border-2 border-slate-200 text-slate-700 font-bold py-2 pl-4 pr-10 rounded-full cursor-pointer focus:outline-none focus:border-slate-900 hover:border-slate-400 transition-colors"
                     >
-                        {cat.icon} {cat.label}
-                    </button>
-                ))}
+                        <option value="newest">✨ มาใหม่ล่าสุด</option>
+                        <option value="top_rated">🔥 พังยับเยินสุด</option>
+                        <option value="most_liked">❤️ ให้กำลังใจเยอะสุด</option>
+                    </select>
+                </div>
             </div>
 
             {/* Stories Grid */}
@@ -159,8 +183,8 @@ export default function Feed() {
                     <p className="text-slate-400 text-sm">เป็นคนแรกที่เริ่มระบายเลย!</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
-                    {filteredStories.map((story) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    {sortedStories.map((story) => (
                         <StoryCard
                             key={story.id}
                             story={story}
