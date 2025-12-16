@@ -1,6 +1,7 @@
 {
-  "/submit/page": "app/submit/page.js",
+  "/not-found": "app/not-found.js",
   "/page": "app/page.js",
+  "/submit/page": "app/submit/page.js",
   "/story/[id]/page": "app/story/[id]/page.js",
   "/profile/edit/page": "app/profile/edit/page.js",
   "/login/page": "app/login/page.js"
