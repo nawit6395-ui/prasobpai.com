@@ -1,6 +1,7 @@
 import { Inter, Noto_Sans_Thai } from "next/font/google"; // แนะนำให้ใช้ Noto Sans Thai
 import "./globals.css";
 import CookieConsent from "@/components/CookieConsent";
+import DevSidebar from "@/components/DevSidebar";
 
 const notoSansThai = Noto_Sans_Thai({ subsets: ["thai"] });
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
       <body className={notoSansThai.className}>
         {children}
         <CookieConsent />
+        <DevSidebar />
       </body>
     </html>
   );
