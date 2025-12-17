@@ -1,7 +1,1 @@
-{
-  "/page": "app/page.js",
-  "/api/stats/route": "app/api/stats/route.js",
-  "/about/page": "app/about/page.js",
-  "/submit/page": "app/submit/page.js",
-  "/login/page": "app/login/page.js"
-}
+{}
