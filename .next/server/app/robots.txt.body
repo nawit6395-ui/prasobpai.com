@@ -1,6 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /api/
-Disallow: /verify-db
-
-Sitemap: https://prasobpai.com/sitemap.xml
